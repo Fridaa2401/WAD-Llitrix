@@ -10,9 +10,6 @@ db.sqlite3
 *.log
 *.pot
 
-# Ignore uploaded media (image/file) folders
-media/
-
 # ─── Virtual environment ─────────────────────────────────────────────────────
 # If your venv folder is named “venv” (or “env”), change accordingly.
 venv/
