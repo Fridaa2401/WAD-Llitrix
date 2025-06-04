@@ -1,0 +1,38 @@
+{% extends "core/base.html" %}
+{% block title %}Chat with {{ friend.username }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold mb-3">Chat with {{ friend.username }}</h1>
+
+    <div class="card shadow-sm p-4 mb-4" style="max-height: 500px; overflow-y: auto;">
+        {% if convo %}
+            {% for msg in convo %}
+                <div class="mb-3 {% if msg.sender == request.user %}text-end{% endif %}">
+                    <strong>{{ msg.sender.username }}</strong>
+                    <small class="text-muted ms-2">{{ msg.timestamp|date:"M d, Y, g:i A" }}</small>
+                    <p class="mt-1">{{ msg.text }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">No messages yet. Say hello!</p>
+        {% endif %}
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <textarea
+                name="text"
+                class="form-control"
+                rows="3"
+                placeholder="Type your message…"
+                required
+            ></textarea>
+        </div>
+        <button type="submit" class="btn btn-danger">Send</button>
+        <a href="{% url 'profile' %}" class="btn btn-outline-secondary ms-2">Back to profile</a>
+    </form>
+</div>
+{% endblock %}
+

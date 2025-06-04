@@ -1,0 +1,33 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Edit Post{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-danger fw-bold text-center">Edit Post: {{ post.title }}</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- Post Title -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Post Title</label>
+                <input type="text" name="title" class="form-control" value="{{ post.title }}" required>
+            </div>
+
+            <!-- Content -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Content</label>
+                <textarea name="content" class="form-control">{{ post.content }}</textarea>
+            </div>
+
+             <!-- Description -->
+             <div class="mb-3">
+                <label class="form-label fw-bold">Description</label>
+                <textarea name="description" class="form-control" rows="4">{{ post.description }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

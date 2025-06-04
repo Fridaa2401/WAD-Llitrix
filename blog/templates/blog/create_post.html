@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+{% block title %}Create Blog Post - Llitrix{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold text-center">Create a New Blog Post</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger">Publish</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block title %}Login - Llitrix{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%;">
+        <h2 class="text-danger fw-bold text-center">🔒 Log In</h2>
+        <p class="text-center">Welcome back! Please log in to continue.</p>
+
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                Invalid username or password. Please try again.
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'login' %}?next={{ request.GET.next }}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">Username</label>
+                <input type="text" name="username" class="form-control" required placeholder="Enter your username">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Password</label>
+                <input type="password" name="password" class="form-control" required placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">Log In</button>
+        </form>
+
+        <p class="text-center mt-3">Don't have an account? <a href="{% url 'register' %}" class="text-danger fw-bold">Sign up</a></p>
+    </div>
+</div>
+{% endblock %}

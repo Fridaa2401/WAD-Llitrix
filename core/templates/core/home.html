@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+
+{% block title %}Home Llitrix{% endblock %}
+
+
+{% block content %}
+
+    <div class="container text-center">
+
+        <img src= "{{ MEDIA_URL }}Llitrix.png" 
+        alt="image" 
+        class="img-fluid rounded d-block" 
+        style="height: 300px; object-fit: contain; margin-bottom: 0; padding-bottom: 0;">
+
+        {% if user.is_authenticated %}
+            <h1 class="text-danger fw-bold mt-2 mb-1">Welcome Back, {{ user.username }}!</h1>
+            <p class="mb-2">Find or create a book club and join the discussion.</p>
+            <a href="{% url 'join' %}" class="btn btn-danger">Join a Book Club</a>
+        {% else %}
+            <div class="bg-danger text-white text-center py-5 mt-3">
+                <h1 class="display-3 fw-bold">Join!</h1>
+                <p>Become part of a community of book lovers!</p>
+                <a href="{% url 'register' %}" class="btn btn-light btn-lg me-3">Register</a>
+                <a href="{% url 'login' %}" class="btn btn-light btn-lg">Log In</a>
+            </div>
+        {% endif %}
+
+    </div>
+
+    <div class="container mt-5 text-center">
+        <div class="d-flex justify-content-center mb-5"></div>
+            <img src= "{{ MEDIA_URL }}mainpage.png" alt="image" class="img-fluid rounded" style="height: 500px; object-fit: contain;">
+</div>
+{% endblock %}

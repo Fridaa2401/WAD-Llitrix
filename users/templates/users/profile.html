@@ -1,0 +1,210 @@
+{% extends "core/base.html" %}
+{% block title %}{{ user.username }}'s Profile - Llitrix{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Profile Header -->
+    <div class="card shadow text-center p-4 mb-5">
+        <img
+            src="{{ user.profile_picture.url|default:'/media/default.jpg' }}"
+            alt="Profile Picture"
+            class="rounded-circle mx-auto border border-3 border-danger"
+            style="width: 150px; height: 150px; object-fit: cover;"
+        >
+        <h2 class="text-danger fw-bold mt-3">{{ user.username }}</h2>
+        <p class="mb-1"><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Bio:</strong> {{ user.bio|default:"No bio added yet." }}</p>
+
+        
+
+        {% if is_own_profile %}
+            <div class="d-flex justify-content-end align-items-center">
+                <a href="{% url 'edit_profile' %}" class="btn btn-warning">Edit Profile</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- ───── FRIEND/ACTION AREA ───── -->
+    {% if not is_own_profile %}
+        <div class="mb-5">
+            {% if is_friend %}
+                <button class="btn btn-secondary" disabled>
+                    You and {{ user.username }} are friends
+                </button>
+
+            {% elif sent_request_obj %}
+                <button class="btn btn-outline-warning" disabled>
+                    Request Sent
+                </button>
+
+            {% elif received_request_obj %}
+                <a
+                    href="{% url 'accept_friend_request' fr_id=received_request_obj.id %}"
+                    class="btn btn-success me-2"
+                >
+                    Accept Friend
+                </a>
+                <a
+                    href="{% url 'reject_friend_request' fr_id=received_request_obj.id %}"
+                    class="btn btn-outline-secondary"
+                >
+                    Reject
+                </a>
+
+            {% else %}
+                <a
+                    href="{% url 'send_friend_request' to_user_id=user.id %}"
+                    class="btn btn-primary"
+                >
+                    Add Friend
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <!-- Notifications -->
+    {% if is_own_profile %}
+        <div class="container mb-5" style="max-height: 300px; overflow-y: auto;">
+            <h2 class="text-danger fw-bold">Notifications</h2>
+            {% if unread_notifications.exists %}
+                <ul class="list-group">
+                    {% for note in unread_notifications %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if note.actor %}
+                                    <strong>{{ note.actor.username }}</strong> {{ note.verb }}
+                                {% else %}
+                                    {{ note.verb }}
+                                {% endif %}
+                                <br>
+                                <small class="text-muted">{{ note.timestamp|date:"F j, Y, g:i A" }}</small>
+                            </div>
+                            <div class="d-flex">
+                                <a href="{{ note.get_absolute_url }}" class="btn btn-sm btn-danger me-2">View</a>
+                                <form method="POST" action="{% url 'mark_notification_read' note.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-outline-secondary">Dismiss</button>
+                                </form>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">You have no new notifications.</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    <!-- Friend Requests -->
+    {% if is_own_profile %}
+        <div class="container mb-5">
+            <h2 class="text-danger fw-bold">Friend Requests</h2>
+            {% if incoming_requests %}
+                <ul class="list-group mt-3">
+                    {% for req in incoming_requests %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ req.from_user.username }}
+                            <div>
+                                <a href="{% url 'accept_friend_request' req.id %}" class="btn btn-sm btn-success me-1">Accept</a>
+                                <a href="{% url 'reject_friend_request' req.id %}" class="btn btn-sm btn-secondary">Reject</a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No pending friend requests.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <!-- Current Friends -->
+
+    <div class="container mb-5">
+        <h2 class="text-danger fw-bold">Friends</h2>
+        {% if friends %}
+            <ul class="list-group mt-3">
+                {% for friend in friends %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ friend.username }}</span>
+                        {% if is_own_profile %}
+                            <div>
+                                <a href="{% url 'profile_with_id' user_id=friend.id %}" class="btn btn-sm btn-outline-primary">View Profile</a>
+                                <a href="{% url 'chat_thread' friend_id=friend.id %}" class="btn btn-sm btn-outline-primary">Chat</a>
+                                <a href="{% url 'remove_friend' friend.id %}" class="btn btn-sm btn-secondary">Remove</a>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'profile_with_id' user_id=friend.id %}" class="btn btn-sm btn-outline-primary">View Profile</a>                        
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            {% if is_own_profile %}
+                <p class="text-muted">You don’t have any friends yet.</p>
+            {% else %}
+                <p class="text-muted">{{ user.username }} does not have any friends yet.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- My Clubs Section -->
+    <div class="card shadow p-4 mb-4">
+        {% if is_own_profile %}
+            <h3 class="text-danger fw-bold mb-3">Clubs You Created</h3>
+        {% else %}
+            <h3 class="text-danger fw-bold mb-3">Clubs {{ user.username }} Created</h3>
+        {% endif %}
+
+        {% if created_clubs %}
+            <div class="row row-cols-1 row-cols-md-2 g-3">
+                {% for club in created_clubs %}
+                    <div class="col">
+                        <a href="{% url 'club_detail' club.id %}" class="btn btn-outline-danger w-100">{{ club.name }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% if is_own_profile %}
+                <p class="text-muted">You haven't created any clubs yet.</p>
+            {% else %}
+                <p class="text-muted">{{ user.username }} has not created any clubs yet.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="card shadow p-4 mb-4">
+        <h3 class="text-danger fw-bold mb-3">Approved Memberships</h3>
+        {% if approved_memberships %}
+            <div class="row row-cols-1 row-cols-md-2 g-3">
+                {% for membership in approved_memberships %}
+                    <div class="col">
+                        <a href="{% url 'club_detail' membership.club.id %}" class="btn btn-outline-danger w-100">{{ membership.club.name }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">You haven’t joined any clubs yet.</p>
+        {% endif %}
+    </div>
+
+    {% if is_own_profile %}
+        <div class="card shadow p-4 mb-5">
+            <h3 class="text-danger fw-bold mb-3">Pending Requests</h3>
+            {% if pending_memberships %}
+                <ul class="list-group">
+                    {% for membership in pending_memberships %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ membership.club.name }}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">No pending join requests.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

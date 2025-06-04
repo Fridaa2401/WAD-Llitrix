@@ -1,0 +1,73 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Edit Club{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-danger fw-bold text-center">Edit Club: {{ club.name }}</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <!-- Club Name -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Club Name</label>
+                <input type="text" name="name" class="form-control" value="{{ club.name }}" required>
+            </div>
+
+            <!-- Category -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Category</label>
+                <select name="category" class="form-control" required>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id == club.category.id %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Description</label>
+                <textarea name="description" class="form-control" rows="4">{{ club.description }}</textarea>
+            </div>
+
+            <!-- Current Book -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Current Book (Optional)</label>
+                <input type="text" name="current_book" class="form-control" value="{{ club.current_book }}">
+            </div>
+
+            <!-- Current Book Picture-->
+             <div class="mb-3">
+                <label class="form-label fw-bold">Current book picture (optional)</label>
+                <input type="file" name="current_book_picture" class="form-control">
+                {% if club.current_book_picture %}
+                    <small class="text-muted">Current: <a href="{{ club.current_book_picture }}" target="_blank">View existing image</a></small>
+                {% endif %}
+             </div>
+
+            <!-- Next Meeting Date -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Next Meeting Date (Optional)</label>
+                <input type="datetime-local" name="meeting_date" class="form-control" value="{{ club.meeting_date|date:'Y-m-d\TH:i' }}">
+            </div>
+            
+            <!--Meeting Location-->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Meeting Location (Optional)</label>
+                <input type="text" name="meeting_location" class="form-control" value="{{ club.meeting_location }}" placeholder="e.g. Zoom link or address">
+            </div>
+
+            <!-- Privacy Setting -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Privacy Setting</label>
+                <select name="privacy" class="form-control" required>
+                    <option value="public" {% if club.is_private == False %}selected{% endif %}>Public (Anyone can join)</option>
+                    <option value="private" {% if club.is_private == True %}selected{% endif %}>Private (Owner must approve members)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

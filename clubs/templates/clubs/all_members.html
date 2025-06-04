@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+{% block title %}Members of {{ club.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold text-center">
+        Members of "{{ club.name }}"
+    </h1>
+    <p class="text-center text-muted mb-4">
+        Total: {{ approved_memberships.count }} member{{ approved_memberships.count|pluralize }}
+    </p>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for membership in approved_memberships %}
+        <div class="col">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <img
+                        src="{{ membership.user.profile_picture.url }}"
+                        alt="{{ membership.user.username }}"
+                        class="rounded-circle mb-3"
+                        style="width: 100px; height: 100px; object-fit: cover;"
+                    >
+                    <h5 class="text-danger">{{ membership.user.username }}</h5>
+                    <p class="text-muted small mb-1">
+                        Joined on {{ membership.requested_at|date:"F d, Y" }}
+                    </p>
+                    <a href="{% url 'public_profile' membership.user.username %}?user={{ membership.user.id }}" 
+                       class="btn btn-outline-danger btn-sm mt-2">
+                        View Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No members yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{% url 'club_detail' club.id %}" class="btn btn-outline-secondary">
+            ← Back to "{{ club.name }}"
+        </a>
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center mt-3">
+        {% if request.user == club.owner %}
+            <a href="{% url 'manage_members' club.id %}" class="btn btn-warning me-2">Manage club members</a>
+
+        {% else %}
+            <p> </p>   
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

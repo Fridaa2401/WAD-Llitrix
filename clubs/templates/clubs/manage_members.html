@@ -1,0 +1,79 @@
+{% extends "core/base.html" %}
+{% block title %}Manage Members - {{ club.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold">Manage Members for {{ club.name }}</h1>
+    
+    <h3 class="mt-4">Pending Requests</h3>
+    {% if pending_requests %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Requested At</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in pending_requests %}
+                <tr>
+                    <td>{{ request.user.username }}</td>
+                    <td>{{ request.requested_at|date:"F d, Y, g:i A" }}</td>
+                    <td>
+                        <!-- These forms assume you have URLs and views to handle the actions -->
+                        <form method="POST" action="{% url 'approve_membership' request.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="btn btn-success btn-sm" type="submit">Approve</button>
+                        </form>
+                        <form method="POST" action="{% url 'reject_membership' request.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="btn btn-danger btn-sm" type="submit">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No pending requests.</p>
+    {% endif %}
+
+    <h3 class="mt-4">Approved Members</h3>
+    {% if approved_members %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Joined On</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for member in approved_members %}
+                <tr>
+                    <td>{{ member.user.username }}</td>
+                    <td>{{ member.requested_at|date:"F d, Y" }}</td>
+                    <td>
+                        <!-- Action to remove member -->
+                        <form method="POST" action="{% url 'remove_member' club.id member.user.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-warning btn-sm" type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No approved members yet.</p>
+    {% endif %}
+
+    <div class="text-center mt-5">
+        <a href="{% url 'club_detail' club.id %}" class="btn btn-outline-secondary">
+            ← Back to "{{ club.name }}"
+        </a>
+    </div>
+    
+</div>
+{% endblock %}

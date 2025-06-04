@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+
+{% block title %}About Llitrix{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex flex-column p-0">
+
+    <div class="flex-shrink-0 text-center p-4">
+    <h1 class="text-danger fw-bold mb-2">About Llitrix</h1>
+    <p class="lead mb-3">Bringing Book Lovers Together!</p>
+
+    <h5 class="text-danger mb-1">What is Llitrix?</h5>
+    <p class="small mb-3">An online platform to <strong>discover</strong>, <strong>join</strong>, and <strong>create</strong> book clubs.</p>
+
+    <h5 class="text-danger mb-1">Why Join?</h5>
+    <p class="small mb-3">Connect with readers, find new books, and share insights.</p>
+
+    <h5 class="text-danger mb-1">How It Works</h5>
+    <p class="small mb-4">Browse clubs, join instantly, and start discussing.</p>
+
+    <div class="d-flex justify-content-center gap-2">
+      <a href="{% url 'join' %}" class="btn btn-danger btn-sm">Find a Club</a>
+      <a href="{% url 'create' %}" class="btn btn-outline-danger btn-sm">Start a Club</a>
+    </div>
+  </div>
+  
+</div>
+{% endblock %}

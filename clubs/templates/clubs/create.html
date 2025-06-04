@@ -1,0 +1,63 @@
+{% extends "core/base.html" %}
+
+{% block title %}Create a Book Club - Llitrix{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold text-center">Create a New Book Club</h1>
+    <p class="text-center">Bring book lovers together by starting your own club!</p>
+
+    <div class="card p-4 shadow-sm">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">Club Name</label>
+                <input type="text" name="name" class="form-control" required placeholder="Enter club name">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Category</label>
+                <select name="category" class="form-control" required>
+                    {% if categories %}
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    {% else %}
+                        <option disabled>No categories available</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Description</label>
+                <textarea name="description" class="form-control" rows="4" required placeholder="What is this club about?"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Current Book (Optional)</label>
+                <input type="text" name="current_book" class="form-control" placeholder="Enter book title">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Next Meeting Date (Optional)</label>
+                <input type="datetime-local" name="next_meeting" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Meeting Location (Optional)</label>
+                <input type="text" name="meeting_location" class="form-control" placeholder="e.g. Zoom link or physical address">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Privacy Setting</label>
+                <select name="privacy" class="form-control" required>
+                    <option value="public">Public (Anyone can join)</option>
+                    <option value="private">Private (Owner must approve members)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">Create Club</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

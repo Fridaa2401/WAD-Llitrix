@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+
+{% block title %}Add Comment{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4">
+        <h2 class="text-danger mb-3">💬 Leave a Comment on "{{ post.title }}"</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-danger mt-2">Submit Comment</button>
+            <a href="{% url 'blog_post' post.id %}" class="btn btn-secondary mt-2">Back to Post</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

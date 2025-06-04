@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+
+{% block title %}Llitrix Blog{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold text-center">Llitrix Blog</h1>
+    <p class="text-center">Stay updated with book club insights, reviews, and more!</p>
+    
+    <div class="row">
+        {% for post in posts %}
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <img src="{{ post.post_picture.url }}" class="card-img-top" style="height: 500px; object-fit: cover;" alt="No Picture">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title text-danger">{{ post.title|truncatewords:7 }}</h3>
+                    <p class="text-muted">By <strong>{{ post.author }}</strong> | {{ post.created_at|date:"F d, Y" }}</p>
+                    <p class="card-text">{{ post.description|truncatewords:20 }}</p>
+                    <a href="{% url 'blog_post' post.id %}" class="btn btn-danger mt-auto">Read More</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No blog posts available yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

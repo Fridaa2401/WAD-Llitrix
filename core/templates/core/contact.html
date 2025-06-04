@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+
+{% block title %}Contact Us - Llitrix{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold text-center">Contact Us</h1>
+    <p class="text-center">We’d love to hear from you! Fill out the form below to reach out.</p>
+
+    <div class="card p-4 shadow-sm">
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">Your Name</label>
+                <input type="text" name="name" class="form-control" required placeholder="Enter your name">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Your Email</label>
+                <input type="email" name="email" class="form-control" required placeholder="Enter your email">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Message</label>
+                <textarea name="message" class="form-control" rows="4" required placeholder="Type your message here..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-danger w-100">Send Message</button>
+        </form>
+    </div>
+
+    <div class="text-center mt-4">
+        <h3 class="text-danger">Our Location</h3>
+        <p>BI Nydalen, 1234 Oslo</p>
+
+        <h3 class="text-danger">Contact Information</h3>
+        <p>Email: llitrix@email.com</p>
+        <p>Phone: +01 234 56 789</p>
+    </div>
+</div>
+{% endblock %}

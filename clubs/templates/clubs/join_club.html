@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+{% block title %}Join {{ club.name }} - Llitrix{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold text-center">🎉 Welcome to {{ club.name }}!</h1>
+    <p class="text-center text-muted">You are now a member of <strong>{{ club.name }}</strong>.</p>
+
+    <div class="card shadow-sm mt-4 p-4">
+        <h3 class="text-danger">📖 About the Club</h3>
+        <p>{{ club.description }}</p>
+
+        <h5 class="mt-3">Next Meeting</h5>
+        {% if club.meeting_date %}
+            <p><strong>{{ club.meeting_date|date:"F d, Y" }}</strong> at {{ club.meeting_date|time:"g:i A" }}, {{ club.location }}</p>
+        {% else %}
+            <p class="text-muted">No meeting scheduled yet.</p>
+        {% endif %}
+
+        <h5 class="mt-3">👥 Members ({{ club.members.count }})</h5>
+        <ul>
+            {% for member in club.members.all %}
+                <li>{{ member.username }}</li>
+            {% endfor %}
+        </ul>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'club_detail' club.id %}" class="btn btn-danger">Go to Club Page</a>
+            <a href="{% url 'join' %}" class="btn btn-outline-secondary">Find More Clubs</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

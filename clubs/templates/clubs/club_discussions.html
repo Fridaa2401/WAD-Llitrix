@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% block title %}Discussions & Events - {{ club.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger fw-bold">Discussions & Upcoming Event for {{ club.name }}</h1>
+
+    {% if upcoming_event %}
+    <div class="alert alert-info">
+        <strong>Upcoming Meeting:</strong> {{ upcoming_event|date:"F d, Y" }} at {{ upcoming_event|time:"g:i A" }}
+        {% if club.meeting_location %}
+            &nbsp;|&nbsp; <strong>Location:</strong> {{ club.meeting_location }}
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <h3 class="mt-4">Recent Discussions</h3>
+    {% if discussions %}
+        {% for message in discussions %}
+        <div class="p-3 mb-3 border rounded">
+            <strong>{{ message.user.username }}</strong> 
+            <small>{{ message.created_at|date:"F d, Y, g:i A" }}</small>
+            <p>{{ message.text }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No discussions yet. Start one now!</p>
+    {% endif %}
+</div>
+{% endblock %}
