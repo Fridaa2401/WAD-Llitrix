@@ -1,23 +1,37 @@
-# Byte‐compiled / optimized / DLL files
+# ─── Python bytecode & caches ────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *$py.class
 
-# Django stuff:
+# ─── Django / project files to ignore ────────────────────────────────────────
+# Ignore SQLite DB and any Django‐generated log files, translations, etc.
+db.sqlite3
+*.sqlite3
 *.log
 *.pot
-*.py[co]
-db.sqlite3
-media/
-*.sqlite3
 
-# Virtual environment
-env/
+# Ignore uploaded media (image/file) folders
+media/
+
+# ─── Virtual environment ─────────────────────────────────────────────────────
+# If your venv folder is named “venv” (or “env”), change accordingly.
 venv/
+env/
 .env
 
-# macOS
+# ─── macOS artifacts ──────────────────────────────────────────────────────────
 .DS_Store
 
-# VS Code
+# ─── VS Code workspace files ─────────────────────────────────────────────────
 .vscode/
+
+# ─── Optional: PyCharm / JetBrains (uncomment if you ever use PyCharm) ───────
+#.idea/
+
+# ─── Optional: Ignore test coverage / build dirs (uncomment if needed) ───────
+# htmlcov/
+# .tox/
+# .pytest_cache/
+# build/
+# dist/
+# *.egg-info/
